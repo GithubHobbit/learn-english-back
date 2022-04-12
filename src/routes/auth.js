@@ -2,22 +2,27 @@ const Router = require('express');
 
 const router = new Router();
 const { check } = require('express-validator');
-const { auth } = require('../controllers');
-// const authMiddleware = require("../middleware/authMiddleware");
-const roleMiddleware = require('../middleware/roleMiddleware');
+const { UserController } = require('../controllers');
+// const authMiddleware = require('../middleware/authMiddleware');
+const checkRole = require('../middleware/checkRoleMiddleware');
 
 router.post(
   '/registration',
   [
-    check('username', 'Имя пользователя не может быть пустым').notEmpty(),
+    check('email', 'Почта не может быть пустой').notEmpty(),
     check(
       'password',
       'Пароль должен быть больше 4 и меньше 18 символов',
     ).isLength({ min: 3, max: 17 }),
   ],
-  auth.registration,
+  UserController.registration,
 );
-router.post('/login', auth.login);
-router.get('/users', roleMiddleware(['USER', 'ADMIN']), auth.getUsers);
+router.post('/login', UserController.login);
+router.get(
+  '/users',
+  checkRole('ADMIN'),
+  // authMiddleware,
+  UserController.getUsers,
+);
 
 module.exports = router;

@@ -1,7 +1,7 @@
-const auth = require('./auth.controller');
-const dictionary = require('./dictionary.controller');
+const UserController = require('./userController');
+const WordController = require('./wordController');
 
 module.exports = {
-  auth,
-  dictionary,
+  UserController,
+  WordController,
 };

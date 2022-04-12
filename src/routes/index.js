@@ -1,3 +1,3 @@
 module.exports = {
-  routes: ['auth', 'dictionary'],
+  routes: ['auth', 'word'],
 };

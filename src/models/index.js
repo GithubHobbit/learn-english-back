@@ -1,9 +1,8 @@
-const User = require('./User');
-const Role = require('./Role');
-const UserDictionary = require('./UserDictionary');
+const sequelize = require('./db');
+const { User, Word } = require('./models');
 
 module.exports = {
+  sequelize,
   User,
-  Role,
-  UserDictionary,
+  Word,
 };
