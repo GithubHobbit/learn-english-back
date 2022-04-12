@@ -55,13 +55,15 @@ class WordController {
           { public_id: `dictionaries/user_${userId}/${name}` },
           (error, result) => {
             console.log(result, error);
-          }
+          },
         );
         pictureURL = uploadResult.secure_url;
-
+          
         unlink(path, (err) => {
           console.log(err);
+          console.log('HI')
         });
+        
       }
 
       const word = await Word.create({
