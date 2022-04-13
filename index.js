@@ -4,7 +4,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv').config();
-// const cors = require('cors');
+const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const { sequelize } = require('./src/models');
 const { routes } = require('./src/routes');
@@ -12,17 +12,17 @@ const errorHandler = require('./src/middleware/ErrorHandlingMiddleware');
 
 // инициализируем приложение
 const app = express();
+app.use(cors());
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'Origin, X-Requested-With, Content-Type, Accept'
+//   );
+//   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-
-  next();
-});
+//   next();
+// });
 const corsOptions = {
   // origin: '*',
   // credentials: true, // access-control-allow-credentials:true
