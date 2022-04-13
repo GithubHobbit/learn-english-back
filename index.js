@@ -20,19 +20,19 @@ const corsOptions = {
 app.use((req, res, next) => {
   console.log(req);
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json,multipart/form-data'
-  );
-  if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header(
-      'Access-Control-Allow-Headers',
-      'Content-Type, Origin, Authorization'
-    );
-  }
+  // res.header('Access-Control-Allow-Credentials', true);
+  // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  // res.header(
+  //   'Access-Control-Allow-Headers',
+  //   'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json,multipart/form-data'
+  // );
+  // if (req.method === 'OPTIONS') {
+  //   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  //   res.header(
+  //     'Access-Control-Allow-Headers',
+  //     'Content-Type, Origin, Authorization'
+  //   );
+  // }
   next();
 });
 app.use(cors(corsOptions));
