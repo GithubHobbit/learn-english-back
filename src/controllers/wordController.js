@@ -40,6 +40,7 @@ class WordController {
 
   async create(req, res, next) {
     try {
+      console.log('HIIII');
       const { firstLang, secondLang } = req.body;
       let pictureURL = null;
       const userId = req.user.id;
@@ -55,7 +56,7 @@ class WordController {
           { public_id: `dictionaries/user_${userId}/${name}` },
           (error, result) => {
             console.log(result, error);
-          },
+          }
         );
         pictureURL = uploadResult.secure_url;
 
