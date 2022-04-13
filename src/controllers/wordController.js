@@ -58,12 +58,11 @@ class WordController {
           },
         );
         pictureURL = uploadResult.secure_url;
-          
+
         unlink(path, (err) => {
           console.log(err);
-          console.log('HI')
+          console.log('HI');
         });
-        
       }
 
       const word = await Word.create({
