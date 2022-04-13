@@ -3,6 +3,8 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
 // const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+
 const { unlink } = require('fs');
 const uuid = require('uuid');
 const ApiError = require('../error/ApiError');
