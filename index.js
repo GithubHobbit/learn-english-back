@@ -17,6 +17,7 @@ const corsOptions = {
   credentials: true, // access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
+
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());
@@ -31,8 +32,14 @@ app.use(
     // limits: { fileSize: 10 * 1024 * 1024 },
     // useTempFiles: true,
     // tempFileDir: '/tmp/',
-  })
+  }),
 );
+app.use((req, res, next) => {
+  res.append('Access-Control-Allow-Origin', ['*']);
+  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.append('Access-Control-Allow-Headers', 'Origin,Content-Type,X-Auth-Token');
+  next();
+});
 
 routes.forEach((item) => {
   app.use(`/api/v1/${item}`, require(`./src/routes/${item}`));
