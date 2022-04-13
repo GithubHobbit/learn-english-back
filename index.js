@@ -32,13 +32,23 @@ app.use(
     // limits: { fileSize: 10 * 1024 * 1024 },
     // useTempFiles: true,
     // tempFileDir: '/tmp/',
-  }),
+  })
 );
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', '*');
-  res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json,multipart/form-data'
+  );
+  req.header('Access-Control-Allow-Origin', '*');
+  req.header('Access-Control-Allow-Credentials', true);
+  req.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  req.header(
+    'Access-Control-Allow-Headers',
+    'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json,multipart/form-data'
+  );
   next();
 });
 
