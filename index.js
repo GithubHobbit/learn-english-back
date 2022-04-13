@@ -26,7 +26,7 @@ app.use(
     // limits: { fileSize: 10 * 1024 * 1024 },
     // useTempFiles: true,
     // tempFileDir: '/tmp/',
-  }),
+  })
 );
 
 routes.forEach((item) => {
