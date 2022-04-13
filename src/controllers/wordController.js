@@ -3,8 +3,6 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
 // const jwt = require('jsonwebtoken');
-const jwt = require('jsonwebtoken');
-
 const { unlink } = require('fs');
 const uuid = require('uuid');
 const ApiError = require('../error/ApiError');
@@ -42,35 +40,36 @@ class WordController {
 
   async create(req, res, next) {
     try {
-      const token = req.headers.authorization.split(' ')[1];
-      if (!token) {
-        return res.status(401).json({ message: 'Пользователь не авторизован' });
-      }
-
-      const decodedData = jwt.verify(token, process.env.SECRET_KEY);
+      console.log("HI1");
       const { firstLang, secondLang } = req.body;
       let pictureURL = null;
-      const userId = decodedData.id;
+      const userId = req.user.id;
+      console.log("HI2");
 
       if (req.files) {
         const { image } = req.files;
         const name = uuid.v4();
         const path = `${__dirname}/../../public/${name}`;
+        console.log("HI3");
+        console.log(path);
 
         image.mv(path);
+        console.log("HI4");
         const uploadResult = await cloudinary.uploader.upload(
           path,
           { public_id: `dictionaries/user_${userId}/${name}` },
           (error, result) => {
             console.log(result, error);
-          }
+          },
         );
+        console.log("HI5");
         pictureURL = uploadResult.secure_url;
 
         unlink(path, (err) => {
           console.log(err);
           console.log('HI');
         });
+        console.log("HI6");
       }
 
       const word = await Word.create({
