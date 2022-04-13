@@ -4,7 +4,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv').config();
-const cors = require('cors');
+// const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const { sequelize } = require('./src/models');
 const { routes } = require('./src/routes');
@@ -18,7 +18,7 @@ const corsOptions = {
   // optionSuccessStatus: 200,
 };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -38,26 +38,35 @@ app.use(
 routes.forEach((item) => {
   app.use(`/api/v1/${item}`, require(`./src/routes/${item}`));
 });
+
 app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
   res.header(
-    'Access-Control-Allow-Origin',
-    'https://english-learn-vue.herokuapp.com/',
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept',
   );
-  // res.header('Access-Control-Allow-Credentials', true);
-  // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  // res.header(
-  //   'Access-Control-Allow-Headers',
-  //   'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json,multipart/form-data'
-  // );
-  // if (req.method === 'OPTIONS') {
-  //   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  //   res.header(
-  //     'Access-Control-Allow-Headers',
-  //     'Content-Type, Origin, Authorization'
-  //   );
-  // }
   next();
 });
+// app.use((req, res, next) => {
+//   res.header(
+//     'Access-Control-Allow-Origin',
+//     'https://english-learn-vue.herokuapp.com/',
+//   );
+// res.header('Access-Control-Allow-Credentials', true);
+// res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+// res.header(
+//   'Access-Control-Allow-Headers',
+//   'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json,multipart/form-data'
+// );
+// if (req.method === 'OPTIONS') {
+//   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'Content-Type, Origin, Authorization'
+//   );
+// }
+//   next();
+// });
 const PORT = process.env.PORT || 5000;
 const start = async () => {
   try {
