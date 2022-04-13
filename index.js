@@ -13,11 +13,20 @@ const errorHandler = require('./src/middleware/ErrorHandlingMiddleware');
 // инициализируем приложение
 const app = express();
 const corsOptions = {
-  origin: 'https://english-learn-vue.herokuapp.com',
+  origin: '*',
   credentials: true, // access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
-
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json,multipart/form-data'
+  );
+  next();
+});
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());
@@ -34,16 +43,7 @@ app.use(
     // tempFileDir: '/tmp/',
   })
 );
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json,multipart/form-data'
-  );
-  next();
-});
+
 
 routes.forEach((item) => {
   app.use(`/api/v1/${item}`, require(`./src/routes/${item}`));
