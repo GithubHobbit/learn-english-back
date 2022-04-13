@@ -21,13 +21,17 @@ app.use((req, res, next) => {
   // );
   res.header(
     'Access-Control-Allow-Headers',
-    'origin, accept, x-requested-with, content-type, authorization, cache-control'
+    'Origin, Accept, X-Requested-With, Content-Type, Authorization, Cache-Control'
   );
   res.header(
     'Access-Control-Allow-Methods',
     'GET,PUT,POST,DELETE,PATCH,OPTIONS'
   );
-  next();
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
 });
 const corsOptions = {
   // origin: '*',
