@@ -27,11 +27,7 @@ app.use((req, res, next) => {
     'Access-Control-Allow-Methods',
     'GET,PUT,POST,DELETE,PATCH,OPTIONS'
   );
-  if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
+  next();
 });
 const corsOptions = {
   // origin: '*',
