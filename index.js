@@ -25,6 +25,13 @@ app.use((req, res, next) => {
     'Access-Control-Allow-Headers',
     'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json,multipart/form-data'
   );
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Content-Type, Origin, Authorization'
+    );
+  }
   next();
 });
 app.use(cors(corsOptions));
@@ -43,7 +50,6 @@ app.use(
     // tempFileDir: '/tmp/',
   })
 );
-
 
 routes.forEach((item) => {
   app.use(`/api/v1/${item}`, require(`./src/routes/${item}`));
