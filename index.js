@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   // );
   res.header(
     'Access-Control-Allow-Headers',
-    'Origin, Accept, X-Requested-With, Content-Type, Authorization, Cache-Control'
+    'Origin, Accept, X-Requested-With, Content-Type, Authorization, Cache-Control, Access-Control-Allow-Origin'
   );
   res.header(
     'Access-Control-Allow-Methods',
