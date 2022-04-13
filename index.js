@@ -15,12 +15,33 @@ const app = express();
 const corsOptions = {
   // origin: '*',
   credentials: true, // access-control-allow-credentials:true
-  optionSuccessStatus: 200,
+  // optionSuccessStatus: 200,
 };
+
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Обработка ошибок
+app.use(errorHandler);
+
+app.use(express.static('./public/')); // to access the files in public folder
+app.use(
+  fileUpload({
+    // limits: { fileSize: 10 * 1024 * 1024 },
+    // useTempFiles: true,
+    // tempFileDir: '/tmp/',
+  }),
+);
+
+routes.forEach((item) => {
+  app.use(`/api/v1/${item}`, require(`./src/routes/${item}`));
+});
 app.use((req, res, next) => {
   res.header(
     'Access-Control-Allow-Origin',
-    'https://english-learn-vue.herokuapp.com/'
+    'https://english-learn-vue.herokuapp.com/',
   );
   // res.header('Access-Control-Allow-Credentials', true);
   // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -37,27 +58,6 @@ app.use((req, res, next) => {
   // }
   next();
 });
-app.use(cors(corsOptions));
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Обработка ошибок
-app.use(errorHandler);
-
-app.use(express.static('./public/')); // to access the files in public folder
-app.use(
-  fileUpload({
-    // limits: { fileSize: 10 * 1024 * 1024 },
-    // useTempFiles: true,
-    // tempFileDir: '/tmp/',
-  })
-);
-
-routes.forEach((item) => {
-  app.use(`/api/v1/${item}`, require(`./src/routes/${item}`));
-});
-
 const PORT = process.env.PORT || 5000;
 const start = async () => {
   try {
