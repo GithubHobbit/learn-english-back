@@ -40,10 +40,15 @@ class WordController {
 
   async create(req, res, next) {
     try {
-      console.log('HIIII');
+      const token = req.headers.authorization.split(' ')[1];
+      if (!token) {
+        return res.status(401).json({ message: 'Пользователь не авторизован' });
+      }
+
+      const decodedData = jwt.verify(token, process.env.SECRET_KEY);
       const { firstLang, secondLang } = req.body;
       let pictureURL = null;
-      const userId = req.user.id;
+      const userId = decodedData.id;
 
       if (req.files) {
         const { image } = req.files;
