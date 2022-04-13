@@ -12,6 +12,15 @@ const errorHandler = require('./src/middleware/ErrorHandlingMiddleware');
 
 // инициализируем приложение
 const app = express();
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+});
 const corsOptions = {
   // origin: '*',
   // credentials: true, // access-control-allow-credentials:true
@@ -32,21 +41,13 @@ app.use(
     // limits: { fileSize: 10 * 1024 * 1024 },
     // useTempFiles: true,
     // tempFileDir: '/tmp/',
-  }),
+  })
 );
 
 routes.forEach((item) => {
   app.use(`/api/v1/${item}`, require(`./src/routes/${item}`));
 });
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept',
-  );
-  next();
-});
 // app.use((req, res, next) => {
 //   res.header(
 //     'Access-Control-Allow-Origin',
