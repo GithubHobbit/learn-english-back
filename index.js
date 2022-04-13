@@ -13,13 +13,15 @@ const errorHandler = require('./src/middleware/ErrorHandlingMiddleware');
 // инициализируем приложение
 const app = express();
 const corsOptions = {
-  origin: '*',
+  // origin: '*',
   credentials: true, // access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
 app.use((req, res, next) => {
-  console.log(req);
-  res.header('Access-Control-Allow-Origin', 'https://english-learn-vue.herokuapp.com/');
+  res.header(
+    'Access-Control-Allow-Origin',
+    'https://english-learn-vue.herokuapp.com/'
+  );
   // res.header('Access-Control-Allow-Credentials', true);
   // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   // res.header(
