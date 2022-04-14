@@ -40,18 +40,14 @@ class WordController {
 
   async create(req, res, next) {
     try {
-      console.log("HI1");
       const { firstLang, secondLang } = req.body;
       let pictureURL = null;
       const userId = req.user.id;
-      console.log("HI2");
 
       if (req.files) {
         const { image } = req.files;
         const name = uuid.v4();
         const path = `${__dirname}/../../public/${name}`;
-        console.log("HI3");
-        console.log(path);
 
         image.mv(path);
         console.log("HI4");
