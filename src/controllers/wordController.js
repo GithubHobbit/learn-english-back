@@ -47,25 +47,25 @@ class WordController {
       if (req.files) {
         const { image } = req.files;
         const name = uuid.v4();
-        const path = `../../public/${name}`;
-        console.log(image);
+        const path = `${__dirname}/../../public/${name}`;
+
         image.mv(path);
-        console.log("HI4");
+        console.log('HI4');
         const uploadResult = await cloudinary.uploader.upload(
           path,
           { public_id: `dictionaries/user_${userId}/${name}` },
           (error, result) => {
             console.log(result, error);
-          },
+          }
         );
-        console.log("HI5");
+        console.log('HI5');
         pictureURL = uploadResult.secure_url;
 
-        // unlink(path, (err) => {
-        //   console.log(err);
-        //   console.log('HI');
-        // });
-        console.log("HI6");
+        unlink(path, (err) => {
+          console.log(err);
+          console.log('HI');
+        });
+        console.log('HI6');
       }
 
       const word = await Word.create({
