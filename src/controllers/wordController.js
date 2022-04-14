@@ -47,7 +47,7 @@ class WordController {
       if (req.files) {
         const { image } = req.files;
         const name = uuid.v4();
-        const path = `${__dirname}/../../public/${name}`;
+        const path = `../../public/${name}`;
         console.log(image);
         image.mv(path);
         console.log("HI4");
