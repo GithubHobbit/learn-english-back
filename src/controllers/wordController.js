@@ -48,7 +48,7 @@ class WordController {
         const { image } = req.files;
         const name = uuid.v4();
         const path = `${__dirname}/../../public/${name}`;
-
+        console.log(image);
         image.mv(path);
         console.log("HI4");
         const uploadResult = await cloudinary.uploader.upload(
@@ -61,10 +61,10 @@ class WordController {
         console.log("HI5");
         pictureURL = uploadResult.secure_url;
 
-        unlink(path, (err) => {
-          console.log(err);
-          console.log('HI');
-        });
+        // unlink(path, (err) => {
+        //   console.log(err);
+        //   console.log('HI');
+        // });
         console.log("HI6");
       }
 
