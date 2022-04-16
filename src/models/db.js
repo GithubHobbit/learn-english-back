@@ -1,9 +1,5 @@
 const { Sequelize } = require('sequelize');
 
-console.log(process.env.DB_NAME);
-console.log(process.env.DB_USER);
-console.log(process.env.DB_PASSWORD);
-
 module.exports = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,

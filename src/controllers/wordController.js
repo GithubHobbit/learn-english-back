@@ -31,7 +31,6 @@ class WordController {
     try {
       const userId = req.user.id;
       const words = await Word.findAll({ where: { userId } });
-      console.log(words);
       return res.status(200).send(words);
     } catch (err) {
       return res.status(400).send(err);
@@ -57,8 +56,8 @@ class WordController {
             console.log(result, error);
           }
         );
+        console.log(uploadResult);
         pictureURL = uploadResult.secure_url;
-
         unlink(path, (err) => {
           console.log(err);
         });
@@ -79,22 +78,29 @@ class WordController {
 
   async update({ params: { id }, body }, res) {
     try {
-      //       const word = word.find(word => word.id === id);
-      console.log('BODY');
-      console.log(body);
       const item = await User.findByIdAndUpdate(id, body, { new: true });
-      console.log('UPDATED_ITEM');
-      console.log(item);
       return res.status(200).send(item);
     } catch (err) {
       return res.status(400).send(err);
     }
   }
 
-  async delete({ params: { id } }, res) {
+  async delete(req, res) {
     try {
-      await User.findByIdAndDelete(id);
-      return res.status(200).send({ status: 'OK', message: 'Рецепт удален' });
+      const wordId = req.params.id;
+      const word = await Word.findOne({ where: { id: wordId } });
+
+      const link = word.picture;
+      const path = link.substring(
+        link.indexOf('dictionaries'),
+        link.lastIndexOf('.')
+      );
+
+      cloudinary.uploader.destroy(path, (result) => {
+        console.log(result);
+      });
+      const result = await Word.destroy({ where: { id: wordId } });
+      return res.status(200).send({ status: 'OK', message: 'Слово удалено' });
     } catch (err) {
       return res.status(400).send(err);
     }
