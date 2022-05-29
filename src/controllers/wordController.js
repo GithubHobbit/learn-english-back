@@ -11,6 +11,7 @@ const cheerio = require('cheerio');
 const ApiError = require('../error/ApiError');
 const cloudinary = require('../../utils/cloudinary');
 const { ExampleSentences, Word } = require('../models');
+const { time } = require('console');
 
 async function pushPicture(picture, userId) {
   const name = uuid.v4();
@@ -31,6 +32,43 @@ async function pushPicture(picture, userId) {
   });
 
   return uploadResult.secure_url;
+}
+
+function filterWords(words, timeZone) {
+  const currentDateStr = new Date().toLocaleString('en-US', { timeZone });
+  const currentDate = new Date(currentDateStr);
+  const repeatWords = [];
+  for (let word in words) {
+    let numberRepetition = words[word].numberRepetition;
+    let nextRepetition = null;
+    const lastRepetitionStr = new Date(
+      words[word].lastRepetition
+    ).toLocaleString('en-US', { timeZone });
+    let lastRepetition = new Date(lastRepetitionStr); //.setHours(0, 0, 0, 0); TODO раскоментировать когда перейду на getDate
+
+    //в будущем поменять на getDate
+    if (numberRepetition === 0) {
+      nextRepetition = lastRepetition;
+    } else if (numberRepetition < 7)
+      nextRepetition = lastRepetition.setMinutes(
+        lastRepetition.getMinutes() + 1
+      );
+    else if (numberRepetition === 7)
+      nextRepetition = lastRepetition.setMinutes(
+        lastRepetition.getMinutes() + 7
+      );
+    else if (numberRepetition === 8)
+      nextRepetition = lastRepetition.setMinutes(
+        lastRepetition.getMinutes() + 14
+      );
+    else continue;
+
+    console.log(nextRepetition);
+    console.log(currentDate);
+    console.log('--------');
+    if (nextRepetition < currentDate) repeatWords.push(words[word]);
+  }
+  return repeatWords;
 }
 
 class WordController {
@@ -54,57 +92,55 @@ class WordController {
   }
 
   async create(req, res, next) {
-    // try {
-    //   const userId = req.user.id;
-    //   const { body } = req;
-    //   const words = [];
-    //   for (let i = 0; true; i++) {
-    //     const firstLang = body[`firstLang${i}`];
-    //     const secondLang = body[`secondLang${i}`];
-    //     const example = body[`example${i}`];
-    //     const translateExample = body[`translateExample${i}`];
-    //     if (!firstLang || !secondLang || !example || !translateExample) {
-    //       break;
-    //     }
+    try {
+      const userId = req.user.id;
+      const { body } = req;
+      const words = [];
+      for (let i = 0; true; i++) {
+        const firstLang = body[`firstLang${i}`];
+        const secondLang = body[`secondLang${i}`];
+        const example = body[`example${i}`];
+        const translateExample = body[`translateExample${i}`];
+        if (!firstLang || !secondLang || !example || !translateExample) {
+          break;
+        }
 
-    //     let pictureURL = null;
-    //     if (req.files && req.files[`picture${i}`])
-    //       pictureURL = await pushPicture(req.files[`picture${i}`], userId);
+        let pictureURL = null;
+        if (req.files && req.files[`picture${i}`])
+          pictureURL = await pushPicture(req.files[`picture${i}`], userId);
 
-    //     const word = await Word.create({
-    //       firstLang,
-    //       secondLang,
-    //       example,
-    //       translateExample,
-    //       picture: pictureURL,
-    //       userId,
-    //     });
-    //     words.push(word);
-    //   }
+        const word = await Word.create({
+          firstLang,
+          secondLang,
+          example,
+          translateExample,
+          picture: pictureURL,
+          userId,
+        });
+        words.push(word);
+      }
 
-    //   return res.status(200).send(words);
-    // } catch (e) {
-    //   return next(ApiError.badRequest(e.message));
-    // }
-    return res.status(200).send('GOOD');
+      return res.status(200).send(words);
+    } catch (e) {
+      return next(ApiError.badRequest(e.message));
+    }
   }
 
   async update(req, res, next) {
     try {
       const { body } = req;
+      const updatedWords = [];
       for (let i = 0; true; i++) {
         const id = body[`id${i}`];
         const firstLang = body[`firstLang${i}`];
         const secondLang = body[`secondLang${i}`];
         const example = body[`example${i}`];
         const translateExample = body[`translateExample${i}`];
-        console.log(body);
         if (!firstLang || !secondLang || !example || !translateExample) {
           break;
         }
 
         const word = await Word.findOne({ where: { id } });
-        console.log(word);
         let pictureURL = word.picture;
         console.log('hi1');
         if (req.files && req.files[`picture${i}`]) {
@@ -123,15 +159,6 @@ class WordController {
           console.log('hi4');
           pictureURL = await pushPicture(req.files[`picture${i}`], userId);
         }
-
-        // const result = await Word.create(body);
-        // console.log(result);
-        // const lastRepetition = word.lastRepetition;
-        // const timeZone = body.timeZone;
-        // const str = lastRepetition.toLocaleString('en-US', {
-        //   timeZone: timeZone,
-        // });
-        // console.log(str.split('/')[1]);
         console.log('hi5');
         await Word.update(
           {
@@ -140,13 +167,13 @@ class WordController {
             example,
             translateExample,
           },
-          { where: { id } }
+          { where: { id }, returning: true, plain: true }
         ).then((result) => {
-          console.log(result);
+          updatedWords.push(result[1].dataValues);
         });
       }
 
-      return res.status(200).send('goood');
+      return res.status(200).send(updatedWords);
     } catch (err) {
       return res.status(400).send(err);
     }
@@ -228,9 +255,9 @@ class WordController {
 
           for (let i = 0; i < size; i++) {
             ExampleSentences.create({
-              term: word,
-              example: englishExamples[i],
-              translateExample: russianExamples[i],
+              term: word.trim(),
+              example: englishExamples[i].trim(),
+              translateExample: russianExamples[i].trim(),
             }).catch((err) => {
               console.log(err);
             });
@@ -248,37 +275,36 @@ class WordController {
     try {
       const userId = req.user.id;
       const words = await Word.findAll({ where: { userId } });
-
       const { timeZone } = req.body;
-      const currentDateStr = new Date().toLocaleString('en-US', { timeZone });
-      const currentDate = new Date(currentDateStr);
-      const repeatWords = [];
-      for (let word in words) {
-        let numberRepetition = words[word].numberRepetition;
-        let nextRepetition = null;
-        const lastRepetitionStr = new Date(
-          words[word].lastRepetition
-        ).toLocaleString('en-US', { timeZone });
-        let lastRepetition = new Date(lastRepetitionStr); //.setHours(0, 0, 0, 0); TODO раскоментировать когда перейду на getDate
 
-        //в будущем поменять на getDate
-        if (numberRepetition === 0) {
-          nextRepetition = lastRepetition;
-        } else if (numberRepetition < 7)
-          nextRepetition = lastRepetition.setMinutes(
-            lastRepetition.getMinutes() + 1
-          );
-        else if (numberRepetition === 7)
-          nextRepetition = lastRepetition.setMinutes(
-            lastRepetition.getMinutes() + 7
-          );
-        else if (numberRepetition === 8)
-          nextRepetition = lastRepetition.setMinutes(
-            lastRepetition.getMinutes() + 14
-          );
-        else continue;
+      const repeatWords = filterWords(words, timeZone);
+      return res.status(200).send(repeatWords);
+    } catch (err) {
+      return res.status(400).send(err);
+    }
+  }
 
-        if (nextRepetition < currentDate) repeatWords.push(words[word]);
+  async getWordsToRepeatWithSentences(req, res) {
+    try {
+      const userId = req.user.id;
+      const words = await Word.findAll({ where: { userId } });
+      const { timeZone } = req.body;
+
+      const repeatWords = filterWords(words, timeZone);
+
+      const promises = [];
+      for (let i = 0; i < repeatWords.length; i++) {
+        const promise = ExampleSentences.findAll({
+          where: { term: repeatWords[i].firstLang },
+        });
+        promises[i] = promise;
+      }
+
+      for (let i = 0; i < repeatWords.length; i++) {
+        const sentenses = await promises[i];
+        const elem = Math.floor(Math.random() * sentenses.length);
+        repeatWords[i].example = sentenses[elem].example;
+        repeatWords[i].translateExample = sentenses[elem].translateExample;
       }
 
       return res.status(200).send(repeatWords);
