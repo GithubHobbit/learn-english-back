@@ -63,9 +63,6 @@ function filterWords(words, timeZone) {
       );
     else continue;
 
-    console.log(nextRepetition);
-    console.log(currentDate);
-    console.log('--------');
     if (nextRepetition < currentDate) repeatWords.push(words[word]);
   }
   return repeatWords;
@@ -93,22 +90,25 @@ class WordController {
 
   async create(req, res, next) {
     try {
+      console.log('hi');
       const userId = req.user.id;
       const { body } = req;
       const words = [];
+      console.log('hi2');
       for (let i = 0; true; i++) {
         const firstLang = body[`firstLang${i}`];
         const secondLang = body[`secondLang${i}`];
         const example = body[`example${i}`];
         const translateExample = body[`translateExample${i}`];
+        console.log('hi3');
         if (!firstLang || !secondLang || !example || !translateExample) {
           break;
         }
-
+        console.log('hi4');
         let pictureURL = null;
         if (req.files && req.files[`picture${i}`])
           pictureURL = await pushPicture(req.files[`picture${i}`], userId);
-
+        console.log('hi5');
         const word = await Word.create({
           firstLang,
           secondLang,
@@ -118,6 +118,7 @@ class WordController {
           userId,
         });
         words.push(word);
+        console.log('hi6');
       }
 
       return res.status(200).send(words);
