@@ -11,8 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.26.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.2",
+    "cheerio": "^1.0.0-rc.10",
     "cloudinary": "^1.29.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
@@ -32,5 +34,8 @@
   },
   "engines": {
     "node": "16.x"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.4.1"
   }
 }
