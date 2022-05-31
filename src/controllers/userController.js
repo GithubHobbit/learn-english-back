@@ -30,7 +30,7 @@ class UserController {
       const candidate = await User.findOne({ where: { email } });
       if (candidate) {
         return next(
-          ApiError.badRequest('Пользователь с таким email уже существует'),
+          ApiError.badRequest('Пользователь с таким email уже существует')
         );
       }
 
@@ -79,7 +79,7 @@ class UserController {
     const token = generateAccessToken(
       req.user.id,
       req.user.email,
-      req.user.role,
+      req.user.role
     );
     return res.json({ token });
   }

@@ -57,26 +57,6 @@ routes.forEach((item) => {
   app.use(`/api/v1/${item}`, require(`./src/routes/${item}`));
 });
 
-// app.use((req, res, next) => {
-//   res.header(
-//     'Access-Control-Allow-Origin',
-//     'https://english-learn-vue.herokuapp.com/',
-//   );
-// res.header('Access-Control-Allow-Credentials', true);
-// res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-// res.header(
-//   'Access-Control-Allow-Headers',
-//   'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json,multipart/form-data'
-// );
-// if (req.method === 'OPTIONS') {
-//   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-//   res.header(
-//     'Access-Control-Allow-Headers',
-//     'Content-Type, Origin, Authorization'
-//   );
-// }
-//   next();
-// });
 const PORT = process.env.PORT || 5000;
 const start = async () => {
   try {

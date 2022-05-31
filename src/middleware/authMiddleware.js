@@ -13,7 +13,9 @@ module.exports = function (req, res, next) {
     const decodedData = jwt.verify(token, process.env.SECRET_KEY);
 
     if (!decodedData) {
-      return res.status(401).json({ message: 'Срок действия токена закончился' });
+      return res
+        .status(401)
+        .json({ message: 'Срок действия токена закончился' });
     }
     req.user = decodedData;
     next();

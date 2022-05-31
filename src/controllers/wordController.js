@@ -11,7 +11,6 @@ const cheerio = require('cheerio');
 const ApiError = require('../error/ApiError');
 const cloudinary = require('../../utils/cloudinary');
 const { ExampleSentences, Word } = require('../models');
-const { time } = require('console');
 
 async function pushPicture(picture, userId) {
   const name = uuid.v4();
@@ -34,8 +33,8 @@ async function pushPicture(picture, userId) {
   return uploadResult.secure_url;
 }
 
-function filterWords(words, timeZone) {
-  const currentDateStr = new Date().toLocaleString('en-US', { timeZone });
+function filterWords(words, timeZone, dateToRepeat) {
+  const currentDateStr = dateToRepeat.toLocaleString('en-US', { timeZone });
   const currentDate = new Date(currentDateStr);
   const repeatWords = [];
   for (let word in words) {
@@ -90,25 +89,20 @@ class WordController {
 
   async create(req, res, next) {
     try {
-      console.log('hi');
       const userId = req.user.id;
       const { body } = req;
       const words = [];
-      console.log('hi2');
       for (let i = 0; true; i++) {
         const firstLang = body[`firstLang${i}`];
         const secondLang = body[`secondLang${i}`];
         const example = body[`example${i}`];
         const translateExample = body[`translateExample${i}`];
-        console.log('hi3');
         if (!firstLang || !secondLang || !example || !translateExample) {
           break;
         }
-        console.log('hi4');
         let pictureURL = null;
         if (req.files && req.files[`picture${i}`])
           pictureURL = await pushPicture(req.files[`picture${i}`], userId);
-        console.log('hi5');
         const word = await Word.create({
           firstLang,
           secondLang,
@@ -118,7 +112,6 @@ class WordController {
           userId,
         });
         words.push(word);
-        console.log('hi6');
       }
 
       return res.status(200).send(words);
@@ -276,9 +269,10 @@ class WordController {
     try {
       const userId = req.user.id;
       const words = await Word.findAll({ where: { userId } });
-      const { timeZone } = req.body;
+      const { timeZone, dateToRepeat } = req.body;
 
-      const repeatWords = filterWords(words, timeZone);
+      if (!dateToRepeat) dateToRepeat = new Date();
+      const repeatWords = filterWords(words, timeZone, dateToRepeat);
       return res.status(200).send(repeatWords);
     } catch (err) {
       return res.status(400).send(err);
@@ -291,7 +285,8 @@ class WordController {
       const words = await Word.findAll({ where: { userId } });
       const { timeZone } = req.body;
 
-      const repeatWords = filterWords(words, timeZone);
+      const dateToRepeat = new Date();
+      const repeatWords = filterWords(words, timeZone, dateToRepeat);
 
       const promises = [];
       for (let i = 0; i < repeatWords.length; i++) {
