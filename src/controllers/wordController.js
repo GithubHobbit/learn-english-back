@@ -41,7 +41,7 @@ function filterWords(words, timeZone, dateToRepeat) {
   console.log('thisDte');
   console.log(thisDate);
   console.log('current');
-  console.log(currentDate);
+  console.log(currentDateStr);
 
   const currentDate = new Date(currentDateStr);
   const repeatWords = [];
