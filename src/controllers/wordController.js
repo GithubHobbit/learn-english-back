@@ -276,7 +276,8 @@ class WordController {
 
       if (!dateToRepeat) dateToRepeat = new Date();
       const repeatWords = filterWords(words, timeZone, dateToRepeat);
-
+      console.log('repeatWords');
+      console.log(repeatWords);
       return res.status(200).send(repeatWords);
     } catch (err) {
       return res.status(400).send(err);
@@ -294,7 +295,7 @@ class WordController {
 
       console.log('repeatWords');
       console.log(repeatWords);
-
+      
       console.log('timeZOne Repeat');
       console.log(timeZone);
       console.log(dateToRepeat);
