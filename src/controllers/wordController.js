@@ -270,9 +270,14 @@ class WordController {
       const userId = req.user.id;
       const words = await Word.findAll({ where: { userId } });
       const { timeZone, dateToRepeat } = req.body;
+      console.log('timeZOne Repeat');
+      console.log(timeZone);
+      console.log(dateToRepeat);
 
       if (!dateToRepeat) dateToRepeat = new Date();
       const repeatWords = filterWords(words, timeZone, dateToRepeat);
+      console.log('repeatWords');
+      console.log(repeatWords);
       return res.status(200).send(repeatWords);
     } catch (err) {
       return res.status(400).send(err);
@@ -287,6 +292,13 @@ class WordController {
 
       const dateToRepeat = new Date();
       const repeatWords = filterWords(words, timeZone, dateToRepeat);
+
+      console.log('repeatWords');
+      console.log(repeatWords);
+      
+      console.log('timeZOne Repeat');
+      console.log(timeZone);
+      console.log(dateToRepeat);
 
       const promises = [];
       for (let i = 0; i < repeatWords.length; i++) {
