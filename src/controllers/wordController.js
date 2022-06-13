@@ -34,6 +34,7 @@ async function pushPicture(picture, userId) {
 }
 
 function filterWords(words, timeZone, dateToRepeat) {
+  console.log('h0');
   const currentDateStr = dateToRepeat.toLocaleString('en-US', { timeZone });
   const currentDate = new Date(currentDateStr);
   const repeatWords = [];
@@ -275,12 +276,12 @@ class WordController {
     try {
       const userId = req.user.id;
       const words = await Word.findAll({ where: { userId } });
-      const { timeZone, dateToRepeat } = req.body;
+      const { timeZone, ToRepeat } = req.body;
       console.log('timeZOne Repeat');
       console.log(timeZone);
-      console.log(dateToRepeat);
+      console.log(ToRepeat);
 
-      dateToRepeat = new Date();
+      let dateToRepeat = new Date();
       console.log('date');
       console.log(dateToRepeat);
       const repeatWords = filterWords(words, timeZone, dateToRepeat);
