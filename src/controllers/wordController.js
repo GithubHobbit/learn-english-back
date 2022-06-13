@@ -274,10 +274,14 @@ class WordController {
       console.log(timeZone);
       console.log(dateToRepeat);
 
-      if (!dateToRepeat) dateToRepeat = new Date();
+      dateToRepeat = new Date();
+      console.log('date');
+      console.log(dateToRepeat);
       const repeatWords = filterWords(words, timeZone, dateToRepeat);
       console.log('repeatWords');
-      console.log(repeatWords);
+      for (let i = 0; i < repeatWords.length; i++) {
+        console.log(repeatWords[i].firstLang);
+      }
       return res.status(200).send(repeatWords);
     } catch (err) {
       return res.status(400).send(err);
@@ -293,9 +297,14 @@ class WordController {
       const dateToRepeat = new Date();
       const repeatWords = filterWords(words, timeZone, dateToRepeat);
 
+      console.log('date');
+      console.log(dateToRepeat);
+
       console.log('repeatWords');
-      console.log(repeatWords);
-      
+      for (let i = 0; i < repeatWords.length; i++) {
+        console.log(repeatWords[i].firstLang);
+      }
+
       console.log('timeZOne Repeat');
       console.log(timeZone);
       console.log(dateToRepeat);
