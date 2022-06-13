@@ -29,6 +29,7 @@ const app = express();
 //   );
 //   next();
 // });
+
 app.use(cors());
 const corsOptions = {
   // origin: '*',
