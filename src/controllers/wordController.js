@@ -36,6 +36,8 @@ async function pushPicture(picture, userId) {
 function filterWords(words, timeZone, dateToRepeat) {
   console.log('typeof dateToRepeat');
   console.log(typeof dateToRepeat);
+  dateToRepeat = new Date(dateToRepeat);
+  console.log(typeof dateToRepeat); 
   const currentDateStr = dateToRepeat.toLocaleString('en-US', { timeZone });
 
   let thisDate = new Date();
