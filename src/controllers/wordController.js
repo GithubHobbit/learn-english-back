@@ -34,10 +34,7 @@ async function pushPicture(picture, userId) {
 }
 
 function filterWords(words, timeZone, dateToRepeat) {
-  console.log('typeof dateToRepeat');
-  console.log(typeof dateToRepeat);
   dateToRepeat = new Date(dateToRepeat);
-  console.log(typeof dateToRepeat); 
   const currentDateStr = dateToRepeat.toLocaleString('en-US', { timeZone });
 
   let thisDate = new Date();
@@ -61,17 +58,11 @@ function filterWords(words, timeZone, dateToRepeat) {
     if (numberRepetition === 0) {
       nextRepetition = lastRepetition;
     } else if (numberRepetition < 7)
-      nextRepetition = lastRepetition.setMinutes(
-        lastRepetition.getMinutes() + 1
-      );
+      nextRepetition = lastRepetition.setDate(lastRepetition.getDate() + 1);
     else if (numberRepetition === 7)
-      nextRepetition = lastRepetition.setMinutes(
-        lastRepetition.getMinutes() + 7
-      );
+      nextRepetition = lastRepetition.setDate(lastRepetition.getDate() + 7);
     else if (numberRepetition === 8)
-      nextRepetition = lastRepetition.setMinutes(
-        lastRepetition.getMinutes() + 14
-      );
+      nextRepetition = lastRepetition.setDate(lastRepetition.getDate() + 14);
     else continue;
 
     if (nextRepetition < currentDate) repeatWords.push(words[word]);
