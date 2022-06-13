@@ -38,13 +38,18 @@ function filterWords(words, timeZone, dateToRepeat) {
   const currentDate = new Date(currentDateStr);
   const repeatWords = [];
   for (let word in words) {
+    console.log('h1');
     let numberRepetition = words[word].numberRepetition;
     let nextRepetition = null;
+
+    console.log('h2');
+
     const lastRepetitionStr = new Date(
       words[word].lastRepetition
     ).toLocaleString('en-US', { timeZone });
     let lastRepetition = new Date(lastRepetitionStr); //.setHours(0, 0, 0, 0); TODO раскоментировать когда перейду на getDate
 
+    console.log('h3');
     //в будущем поменять на getDate
     if (numberRepetition === 0) {
       nextRepetition = lastRepetition;
@@ -62,6 +67,7 @@ function filterWords(words, timeZone, dateToRepeat) {
       );
     else continue;
 
+    console.log('h4');
     if (nextRepetition < currentDate) repeatWords.push(words[word]);
   }
   return repeatWords;
