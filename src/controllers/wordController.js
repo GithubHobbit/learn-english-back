@@ -34,23 +34,17 @@ async function pushPicture(picture, userId) {
 }
 
 function filterWords(words, timeZone, dateToRepeat) {
-  console.log('h0');
   const currentDateStr = dateToRepeat.toLocaleString('en-US', { timeZone });
   const currentDate = new Date(currentDateStr);
   const repeatWords = [];
   for (let word in words) {
-    console.log('h1');
     let numberRepetition = words[word].numberRepetition;
     let nextRepetition = null;
-
-    console.log('h2');
-
     const lastRepetitionStr = new Date(
       words[word].lastRepetition
     ).toLocaleString('en-US', { timeZone });
     let lastRepetition = new Date(lastRepetitionStr); //.setHours(0, 0, 0, 0); TODO раскоментировать когда перейду на getDate
 
-    console.log('h3');
     //в будущем поменять на getDate
     if (numberRepetition === 0) {
       nextRepetition = lastRepetition;
@@ -68,7 +62,6 @@ function filterWords(words, timeZone, dateToRepeat) {
       );
     else continue;
 
-    console.log('h4');
     if (nextRepetition < currentDate) repeatWords.push(words[word]);
   }
   return repeatWords;
@@ -276,19 +269,17 @@ class WordController {
     try {
       const userId = req.user.id;
       const words = await Word.findAll({ where: { userId } });
-      const { timeZone, ToRepeat } = req.body;
-      console.log('timeZOne Repeat');
-      console.log(timeZone);
-      console.log(ToRepeat);
+      const { timeZone, dateToRepeat } = req.body;
 
-      let dateToRepeat = new Date();
-      console.log('date');
+      console.log('dateToRepeat');
       console.log(dateToRepeat);
+
+      if (!dateToRepeat) dateToRepeat = new Date();
+      const thisDate = new Date();
+      console.log('thisDate');
+      console.log(thisDate);
       const repeatWords = filterWords(words, timeZone, dateToRepeat);
-      console.log('repeatWords');
-      for (let i = 0; i < repeatWords.length; i++) {
-        console.log(repeatWords[i].firstLang);
-      }
+
       return res.status(200).send(repeatWords);
     } catch (err) {
       return res.status(400).send(err);
@@ -303,18 +294,6 @@ class WordController {
 
       const dateToRepeat = new Date();
       const repeatWords = filterWords(words, timeZone, dateToRepeat);
-
-      console.log('date');
-      console.log(dateToRepeat);
-
-      console.log('repeatWords');
-      for (let i = 0; i < repeatWords.length; i++) {
-        console.log(repeatWords[i].firstLang);
-      }
-
-      console.log('timeZOne Repeat');
-      console.log(timeZone);
-      console.log(dateToRepeat);
 
       const promises = [];
       for (let i = 0; i < repeatWords.length; i++) {
